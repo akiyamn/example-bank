@@ -22,10 +22,17 @@ const APP_ID_TOKEN_URL = process.env.APP_ID_TOKEN_URL
 const IAM_TOKEN_URL = 'https://iam.cloud.ibm.com/identity/token'
 
 router.get('/random_user', function (req, res) {
+	console.log("/random_user")
 	res.send(random_name())
 })
 
+router.get('/hello', function (req, res) {
+    res.send("hello world")
+    console.log("hi")
+})
+
 router.post('/login', function (req, res) {
+  console.log("/login")
   getAppIdToken(req.body.username, req.body.password, (err, response, body) => {
     if (err) {
       console.log(err)
@@ -55,6 +62,7 @@ router.post('/login', function (req, res) {
 })
 
 router.post('/create_account', function (req, res) {
+	console.log("/create_account")
 	let reqeustBody = req.body
 	let userData = {
 		displayName: reqeustBody.firstName + " " + reqeustBody.lastName,
@@ -86,6 +94,7 @@ router.post('/create_account', function (req, res) {
 })
 
 router.get("/get_all_users", function(req, res) {
+	console.log("/get_all_users")
 	getIAMToken(APP_ID_IAM_APIKEY, IAM_TOKEN_URL).then((token) => {
 		getUsersAppID(token, (users) => {
 			if (users == null) {
