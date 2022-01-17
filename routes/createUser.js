@@ -15,7 +15,8 @@ let selfServiceManager = new SelfServiceManager({
 	managementUrl: APP_ID_MANAGEMENT_URL
 });
 // app id client credentials
-const hidden = require("./hidden")
+const hidden = require("./hidden.js")
+// console.log(hidden)
 // const APP_ID_CLIENT_ID = process.env.APP_ID_CLIENT_ID
 // const APP_ID_CLIENT_SECRET = process.env.APP_ID_CLIENT_SECRET
 // const APP_ID_TOKEN_URL = process.env.APP_ID_TOKEN_URL
