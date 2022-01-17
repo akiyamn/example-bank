@@ -15,9 +15,13 @@ let selfServiceManager = new SelfServiceManager({
 	managementUrl: APP_ID_MANAGEMENT_URL
 });
 // app id client credentials
-const APP_ID_CLIENT_ID = process.env.APP_ID_CLIENT_ID
-const APP_ID_CLIENT_SECRET = process.env.APP_ID_CLIENT_SECRET
-const APP_ID_TOKEN_URL = process.env.APP_ID_TOKEN_URL
+const hidden = require("./hidden")
+// const APP_ID_CLIENT_ID = process.env.APP_ID_CLIENT_ID
+// const APP_ID_CLIENT_SECRET = process.env.APP_ID_CLIENT_SECRET
+// const APP_ID_TOKEN_URL = process.env.APP_ID_TOKEN_URL
+const APP_ID_CLIENT_ID = hidden.APP_ID_CLIENT_ID
+const APP_ID_CLIENT_SECRET = hidden.APP_ID_CLIENT_SECRET
+const APP_ID_TOKEN_URL = hidden.APP_ID_TOKEN_URL
 // IAM token url
 const IAM_TOKEN_URL = 'https://iam.cloud.ibm.com/identity/token'
 
@@ -95,6 +99,7 @@ router.post('/create_account', function (req, res) {
 
 router.get("/get_all_users", function(req, res) {
 	console.log("/get_all_users")
+/*
 	getIAMToken(APP_ID_IAM_APIKEY, IAM_TOKEN_URL).then((token) => {
 		getUsersAppID(token, (users) => {
 			if (users == null) {
@@ -104,6 +109,8 @@ router.get("/get_all_users", function(req, res) {
 			res.send(users)
 		})
 	})
+*/
+	res.send(["alice"])
 });
 
 function getAppIdToken(username, password, callback) {
@@ -117,7 +124,8 @@ function getAppIdToken(username, password, callback) {
     form: {
       username,
       password,
-      grant_type: 'password'
+      grant_type: 'password',
+	  scope: 'openid'
     }
   }
 

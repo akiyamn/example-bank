@@ -14,6 +14,7 @@ function loginWithAppId(username, password, callback) {
         console.log(json)
         callback(json)
     }).catch((error) => {
+        console.error(error)
         callback(null)
     })
 }

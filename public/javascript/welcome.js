@@ -19,6 +19,7 @@ class Welcome extends HTMLElement {
         let sr = this.shadowRoot;
 
         let selectUserInput = sr.getElementById("usernameselect")
+        let passwordInput = sr.getElementById("passwordbox")
         let signinButton = sr.getElementById("signin")
 
         var phoneview = document.getElementById("phoneview");
@@ -55,7 +56,7 @@ class Welcome extends HTMLElement {
         }
 
         signinButton.addEventListener("click", e => {
-            this.signin(selectUserInput.value, selectUserInput.value)
+            this.signin(selectUserInput.value, passwordInput.value)
         })
     }
 
@@ -75,6 +76,7 @@ class Welcome extends HTMLElement {
             // when login complete,
             // re-initialize app?
             new Loyalty(this.mode);
+            console.debug(">>>", jsonWebToken, jsonWebToken.id_token)
             let id_object = loyalty.parseJwt(jsonWebToken.id_token)
             console.log(id_object)
 
