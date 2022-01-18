@@ -276,19 +276,6 @@
             width: 120px;
             color: var(--loyalty-phone-color);
         }
-
-        .usernameinput {
-            width: 120px;
-            text-align: center;
-            font-family: inherit;
-            height: 28px;
-            margin-top: 10px;
-            border: 2px solid #ffe5cc;
-            background: #ffe5cc;
-            border: 2px solid var(--loyalty-highlight-color);
-            background:var(--loyalty-highlight-color);
-        }
-
         .signin {
             width: 120px;
             height: 28px;
@@ -341,9 +328,8 @@
             <img class="citylogo" src="../images/banklogo.svg">
             <!-- <div class="cityname">New York</div> -->
         </div>
-        <select class="usernameinput" id="usernameselect">
-        </select>
-	<input type="password" id="passwordbox"></input>
+        <input placeholder="username" class="usernameinput" id="usernameselect"></input>
+	    <input type="password" id="passwordbox"></input>
         <button class="signin" id="signin">SIGN IN</button>
         <div class="or">OR</div>
         <button class="signup" onclick="loyalty.signup()">SIGN UP</button>
