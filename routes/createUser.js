@@ -114,7 +114,7 @@ router.post('/create_account', function (req, res) {
 					},
 					json: true,
 				  };
-				  
+				  console.log(">>>> ", accountOptions)
 				  request(accountOptions, function (error, response, body) {
 					if (error) console.log(err)
 					if (response.statusCode != 201) console.log(response.statusCode)
@@ -123,7 +123,6 @@ router.post('/create_account', function (req, res) {
 				  });				  
 			} else {
 				res.status(response.statusCode).send(body)
-				console.log("?")
 			}
 		}
 	  });
