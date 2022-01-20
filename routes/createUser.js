@@ -8,25 +8,21 @@ dotenv.config();
 const random_name = require('node-random-name');
 // app id self service manager
 const SelfServiceManager = require("ibmcloud-appid").SelfServiceManager;
-let APP_ID_IAM_APIKEY = process.env.APP_ID_IAM_APIKEY
-let APP_ID_MANAGEMENT_URL = process.env.APP_ID_MANAGEMENT_URL
-let selfServiceManager = new SelfServiceManager({
-	iamApiKey: APP_ID_IAM_APIKEY,
-	managementUrl: APP_ID_MANAGEMENT_URL
-});
+// let APP_ID_IAM_APIKEY = process.env.APP_ID_IAM_APIKEY
+// let APP_ID_MANAGEMENT_URL = process.env.APP_ID_MANAGEMENT_URL
+// let selfServiceManager = new SelfServiceManager({
+// 	iamApiKey: APP_ID_IAM_APIKEY,
+// 	managementUrl: APP_ID_MANAGEMENT_URL
+// });
 // app id client credentials
 // console.log(hidden)
-// const APP_ID_CLIENT_ID = process.env.APP_ID_CLIENT_ID
-// const APP_ID_CLIENT_SECRET = process.env.APP_ID_CLIENT_SECRET
-// const APP_ID_TOKEN_URL = process.env.APP_ID_TOKEN_URL
+ const APP_ID_CLIENT_ID = process.env.APP_ID_CLIENT_ID
+ const APP_ID_CLIENT_SECRET = process.env.APP_ID_CLIENT_SECRET
+ const APP_ID_TOKEN_URL = process.env.APP_ID_TOKEN_URL
 
-// taken from hidden.js in tis directory
-const hidden = require("./hidden.js")
-const APP_ID_CLIENT_ID = hidden.APP_ID_CLIENT_ID
-const APP_ID_CLIENT_SECRET = hidden.APP_ID_CLIENT_SECRET
-const APP_ID_TOKEN_URL = hidden.APP_ID_TOKEN_URL
-const RHSSO_BASE_URL = hidden.RHSSO_BASE_URL
-const BANK_REALM = hidden.BANK_REALM
+// Will likely need these to both be new secrets
+const RHSSO_BASE_URL = APP_ID_TOKEN_URL.split("/auth/")[0]
+const BANK_REALM = "banksso"
 // IAM token url
 // const IAM_TOKEN_URL = 'https://iam.cloud.ibm.com/identity/token'
 
