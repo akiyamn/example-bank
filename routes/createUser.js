@@ -56,6 +56,27 @@ router.post('/login', function (req, res) {
 	})
 })
 
+
+/**
+ * Log in as the client used by the application. Provides auth tokens in callback
+ */
+function loginAsClient(callback) {
+	const options = {
+		method: 'POST',
+		url: APP_ID_TOKEN_URL + "/token",
+		headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+		form: {
+			grant_type: 'client_credentials',
+			client_id: APP_ID_CLIENT_ID,
+			client_secret: APP_ID_CLIENT_SECRET
+		},
+	};
+	request(options, function (err, response, body) {
+		callback(err, response, body)
+	})
+}
+
+
 /**
  * Create user endpoint
  * Given a first name, last name, email and password, create a new user account in RHSSO
@@ -63,21 +84,9 @@ router.post('/login', function (req, res) {
 router.post('/create_account', function (req, res) {
 	console.log("/create_account")
 	let requestBody = req.body
-
-	// Client login request body
-	const options = {
-		method: 'POST',
-		url: APP_ID_TOKEN_URL + "/token",
-		headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-		form: {
-		  grant_type: 'client_credentials',
-		  client_id: APP_ID_CLIENT_ID,
-		  client_secret: APP_ID_CLIENT_SECRET
-		},
-	  };
 	  
 	  // Sign into RHSSO as the client, which should have user creation privileges
-	  request(options, function (error, response, body) {
+	  loginAsClient(function (error, response, body) {
 		if (error) throw new Error(error)
 		let jsonBody = JSON.parse(body)
 		if (jsonBody.error) {
