@@ -7,32 +7,40 @@ dotenv.config();
 // random name generator
 const random_name = require('node-random-name');
 
-const APP_ID_CLIENT_ID = process.env.APP_ID_CLIENT_ID
-const APP_ID_CLIENT_SECRET = process.env.APP_ID_CLIENT_SECRET
-const APP_ID_TOKEN_URL = process.env.APP_ID_TOKEN_URL
+// Environment variables
+const APP_ID_CLIENT_ID = process.env.APP_ID_CLIENT_ID // Name or id of the client
+const APP_ID_CLIENT_SECRET = process.env.APP_ID_CLIENT_SECRET // Secret of the client
+const APP_ID_TOKEN_URL = process.env.APP_ID_TOKEN_URL // OpenID endpoint for login token
 const RHSSO_BANK_REALM = process.env.RHSSO_BANK_REALM || "banksso"
 const RHSSO_BASE_URL = process.env.RHSSO_BASE_URL || APP_ID_TOKEN_URL.split("/auth/")[0]
 
+/**
+ * Provides a randomly generated name in the form of '<first> <last>' in plaintext
+ */
 router.get('/random_user', function (req, res) {
 	console.log("/random_user")
 	res.send(random_name())
 })
 
+/**
+ * Login endpoint
+ * Given a username and password via JSON, provide a login token (access and id) and place them in the cookie jar
+ */
 router.post('/login', function (req, res) {
 	console.log("/login")
-	getAppIdToken(req.body.username, req.body.password, (err, response, body) => {
-		if (err) {
+	getLoginTokens(req.body.username, req.body.password, (err, response, body) => {
+		if (err) { // Failed to login
 			console.log(err)
 			console.log(response)
 			console.log(body)
 			res.send(err)
 		} else {
 			let jsonBody = JSON.parse(body)
-			if (jsonBody.error) {
+			if (jsonBody.error) { // Can not parse json returned
 				console.log(jsonBody)
 				res.status('404').send(body)
 			} else {
-				if (response.statusCode == 200) {
+				if (response.statusCode == 200) { // Login successful
 					let expiry = jsonBody.expires_in || 1
 					let cookieOptions = {
 						maxAge: expiry * 1000
@@ -41,17 +49,22 @@ router.post('/login', function (req, res) {
 					res.cookie('id_token', jsonBody.id_token, cookieOptions)
 					res.send(body)
 				} else {
-					res.status(response.statusCode).send(body)
+					res.status(response.statusCode).send(body) // Other HTTP error caused by login
 				}
 			}
 		}
 	})
 })
 
+/**
+ * Create user endpoint
+ * Given a first name, last name, email and password, create a new user account in RHSSO
+ */
 router.post('/create_account', function (req, res) {
 	console.log("/create_account")
 	let requestBody = req.body
 
+	// Client login request body
 	const options = {
 		method: 'POST',
 		url: APP_ID_TOKEN_URL + "/token",
@@ -63,6 +76,7 @@ router.post('/create_account', function (req, res) {
 		},
 	  };
 	  
+	  // Sign into RHSSO as the client, which should have user creation privileges
 	  request(options, function (error, response, body) {
 		if (error) throw new Error(error)
 		let jsonBody = JSON.parse(body)
@@ -71,6 +85,8 @@ router.post('/create_account', function (req, res) {
 			res.status('404').send(body)
 		} else {
 			if (response.statusCode == 200) {
+
+				// User creation request body
 				let token = jsonBody.access_token
 				const accountOptions = {
 					method: 'POST',
@@ -84,7 +100,7 @@ router.post('/create_account', function (req, res) {
 					  lastName: requestBody.lastName,
 					  email: requestBody.email,
 					  enabled: 'true',
-					  username: requestBody.firstName + requestBody.lastName,
+					  username: requestBody.firstName + requestBody.lastName, // Username is generated from names
 					  credentials: [{
 						  type: "password",
 						  value: requestBody.password
@@ -92,24 +108,26 @@ router.post('/create_account', function (req, res) {
 					},
 					json: true,
 				  };
+
+				  // Initiate request to create account in RHSSO using login tokens
 				  request(accountOptions, function (error, response, body) {
 					if (error) { 
 						console.log(err) 
 					} else if (response.statusCode != 201) {
-						console.log("HTTP error", response.statusCode, "while trying to create account")
+						console.log("HTTP error:", response.statusCode, "while trying to create account")
 					} else {
 						res.send({status: "user created successfully"})
 						console.log("User created in Keycloak")
 					}
 				  });				  
 			} else {
-				res.status(response.statusCode).send(body)
+				res.status(response.statusCode).send(body) // In unable to login as client
 			}
 		}
 	  });
 })
 
-function getAppIdToken(username, password, callback) {
+function getLoginTokens(username, password, callback) {
 	let options = {
 		url: APP_ID_TOKEN_URL + "/token",
 		method: 'POST',
@@ -121,7 +139,7 @@ function getAppIdToken(username, password, callback) {
 			username,
 			password,
 			grant_type: 'password',
-			scope: 'openid'
+			scope: 'openid' // Required for Keycloak to provide the id_token
 		}
 	}
 
