@@ -9,33 +9,6 @@ class Loyalty {
         var phoneview = document.getElementById("phoneview");
         this.mobileview = phoneview.getMobileView();
 
-        // if cookie exists - then user is logged in
-        //  navigate to account section
-
-        // if(this.mode=='INTEGRATED'){
-        //     if (this.getCookie('access_token') != "" && this.getCookie('id_token') != "") {
-        //         let id_object = this.parseJwt(this.getCookie('id_token'))
-        //         console.log(id_object)
-
-        //         var accountinfo = {
-        //             firstname: id_object.given_name,
-        //             surname: id_object.family_name
-        //         }
-
-        //         var fullname = accountinfo.firstname + ' ' + accountinfo.surname
-
-        //         this.mobileview.innerHTML = "";
-
-        //         let element = document.createElement('transactions-element')
-        //         element.setAttribute('name', fullname);
-        //         element.setAttribute('mode', this.mode);
-        //         this.mobileview.appendChild(element); 
-
-        //         localStorage.setItem("loyaltyname", fullname);
-        //         console.log(phoneview)
-        //         phoneview.showNavigation();
-        //     }
-        // }
     }
 
     signup() {
@@ -87,5 +60,4 @@ class Loyalty {
       }
 }
 
-// var loyalty = new Loyalty();
 var loyalty = new Loyalty();

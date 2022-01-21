@@ -55,14 +55,3 @@ function createAccountAppId(firstname, lastname, password, email, callback) {
     })
 }
 
-function getAllUsers(callback) {
-    fetch('/demo/get_all_users')
-    .then((response) => {
-        return response.json()
-    }).then((users) => {
-        callback(users)
-    })
-}
-
-// sample appid account
-// loginWithAppId("RolandeColla", "RolandeColla")

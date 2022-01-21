@@ -45,17 +45,7 @@ class Welcome extends HTMLElement {
             localStorage.setItem("loyaltyname", fullname);
 
             phoneview.showNavigation();
-        } 
-        // else {
-            
-            // getAllUsers((users) => {
-            //     users.forEach(user => {
-            //         var option = document.createElement("option");
-            //         option.text = user
-            //         selectUserInput.add(option)
-            //     });
-            // })
-        // }
+        }
 
         signinButton.addEventListener("click", e => {
             this.signin(userInput.value, passwordInput.value)
@@ -78,7 +68,6 @@ class Welcome extends HTMLElement {
             // when login complete,
             // re-initialize app?
             new Loyalty(this.mode);
-            console.debug(">>>", jsonWebToken)
             let id_object = loyalty.parseJwt(jsonWebToken.id_token)
             console.log(id_object)
 
