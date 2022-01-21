@@ -7,13 +7,11 @@ dotenv.config();
 // random name generator
 const random_name = require('node-random-name');
 
- const APP_ID_CLIENT_ID = process.env.APP_ID_CLIENT_ID
- const APP_ID_CLIENT_SECRET = process.env.APP_ID_CLIENT_SECRET
- const APP_ID_TOKEN_URL = process.env.APP_ID_TOKEN_URL
-
-// Will likely need these to both be new secrets
-const RHSSO_BASE_URL = APP_ID_TOKEN_URL.split("/auth/")[0]
-const BANK_REALM = "banksso"
+const APP_ID_CLIENT_ID = process.env.APP_ID_CLIENT_ID
+const APP_ID_CLIENT_SECRET = process.env.APP_ID_CLIENT_SECRET
+const APP_ID_TOKEN_URL = process.env.APP_ID_TOKEN_URL
+const RHSSO_BANK_REALM = process.env.RHSSO_BANK_REALM || "banksso"
+const RHSSO_BASE_URL = process.env.RHSSO_BASE_URL || APP_ID_TOKEN_URL.split("/auth/")[0]
 
 router.get('/random_user', function (req, res) {
 	console.log("/random_user")
@@ -56,7 +54,7 @@ router.post('/create_account', function (req, res) {
 
 	const options = {
 		method: 'POST',
-		url: RHSSO_BASE_URL + '/auth/realms/' + BANK_REALM + '/protocol/openid-connect/token',
+		url: APP_ID_TOKEN_URL + "/token",
 		headers: {'Content-Type': 'application/x-www-form-urlencoded'},
 		form: {
 		  grant_type: 'client_credentials',
@@ -76,7 +74,7 @@ router.post('/create_account', function (req, res) {
 				let token = jsonBody.access_token
 				const accountOptions = {
 					method: 'POST',
-					url: RHSSO_BASE_URL + '/auth/admin/realms/' + BANK_REALM + '/users',
+					url: RHSSO_BASE_URL + '/auth/admin/realms/' + RHSSO_BANK_REALM + '/users',
 					headers: {
 					  'Content-Type': 'application/json',
 					  Authorization: 'Bearer ' + token
@@ -94,12 +92,15 @@ router.post('/create_account', function (req, res) {
 					},
 					json: true,
 				  };
-				  console.log(">>>> ", accountOptions)
 				  request(accountOptions, function (error, response, body) {
-					if (error) console.log(err)
-					if (response.statusCode != 201) console.log(response.statusCode)
-					res.send({status: "user created successfully"})
-					console.log("User created in Keycloak")
+					if (error) { 
+						console.log(err) 
+					} else if (response.statusCode != 201) {
+						console.log("HTTP error", response.statusCode, "while trying to create account")
+					} else {
+						res.send({status: "user created successfully"})
+						console.log("User created in Keycloak")
+					}
 				  });				  
 			} else {
 				res.status(response.statusCode).send(body)
@@ -107,11 +108,6 @@ router.post('/create_account', function (req, res) {
 		}
 	  });
 })
-
-router.get("/get_all_users", function (req, res) {
-	console.log("/get_all_users")
-	res.send(["alice"])
-});
 
 function getAppIdToken(username, password, callback) {
 	let options = {
