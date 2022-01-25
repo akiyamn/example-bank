@@ -87,7 +87,7 @@ router.post('/create_account', function (req, res) {
 	  
 	  // Sign into RHSSO as the client, which should have user creation privileges
 	  loginAsClient(function (error, response, body) {
-		if (error) throw new Error(error)
+		if (error) console.log(error)
 		let jsonBody = JSON.parse(body)
 		if (jsonBody.error) {
 			console.log(jsonBody)
