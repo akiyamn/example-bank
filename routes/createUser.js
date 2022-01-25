@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const request = require('request')
+process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = 0
 // use .env file
 const dotenv = require('dotenv');
 dotenv.config();
