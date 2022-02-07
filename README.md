@@ -87,4 +87,4 @@ docker push $IMAGE_SERVICE_URL/transaction-service
 ## Running
 As described above, this app is designed to run in an OpenShift 4.x environment.
 
-Please continue by following the guide in [this repo](https://github.com/akiyamn/example-bank-rhacm/tree/vault) which provides assets to run the app in OpenShift 4.x with RHACM. The next repo also uses External Secrets, which can be substituted for normal secrets if they are not applicable to your situation.
+Please continue by following the guide in [this repo](https://github.com/akiyamn/example-bank-rhacm) which provides assets to run the app in OpenShift 4.x with RHACM. The next repo also uses External Secrets, which can be substituted for normal secrets if they are not applicable to your situation.
