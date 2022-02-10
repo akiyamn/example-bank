@@ -153,7 +153,7 @@ public class TransactionResource extends BaseResource {
         }
     }
 
-    // TODO: require admin scope
+    // Removed @RequiresAuthorization
     /**
      * This method updates a transaction.
      */
@@ -161,7 +161,6 @@ public class TransactionResource extends BaseResource {
     @Path("reward/{transactionId}")
     @Consumes(MediaType.APPLICATION_JSON)
     @Transactional
-    @RequiresAuthorization
     public Response updateTransaction(@PathParam("transactionId") String transactionId, RewardTransactionDefinition rewardTransactionDefinition) {
         // Validate UUID is formatted correctly.
         try {
