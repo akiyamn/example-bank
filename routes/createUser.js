@@ -24,6 +24,14 @@ router.get('/random_user', function (req, res) {
 })
 
 /**
+ * Returns the hostname of the pod for testing purposes
+ */
+ router.get('/pod', function (req, res) {
+	 var pod = process.env.HOSTNAME || "unable to get hostname from environment variables :("
+	res.send(pod)
+})
+
+/**
  * Login endpoint
  * Given a username and password via JSON, provide a login token (access and id) and place them in the cookie jar
  */

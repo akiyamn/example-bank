@@ -12,6 +12,7 @@
 </head>
 
 <body class="loyalty">
+    <div id="pod" style="position: absolute;"></div>
     <div class="container">
         <div class="navigation">
             <div class="titlebar">
@@ -42,10 +43,15 @@
             if(supportTest == false){
                 window.alert('If you see this alert, it means this example is not compatible with your browser. This example uses Web Components - a technology supported in the latest versions of Firefox, Chrome and Safari. Please update your browser to the latest release.');
             }
+
+            fetch("demo/pod")
+                .then(response => response.text())
+                .then(data => document.getElementById("pod").innerText = data)
         </script>      
         </div>
     </div>
 </body>
+
 
 <template id="phone">
     <style>   
